@@ -1,0 +1,36 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)1.sql	2.1.8.1
+-- TPC-H/TPC-R Pricing Summary Report Query (Q1)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+
+
+select
+	l_returnflag,
+	l_linestatus,
+	sum(l_quantity) as sum_qty,
+	sum(l_extendedprice) as sum_base_price,
+	sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,
+	sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,
+	avg(l_quantity) as avg_qty,
+	avg(l_extendedprice) as avg_price,
+	avg(l_discount) as avg_disc,
+	count(*) as count_order
+from
+	lineitem
+where
+	l_shipdate <= date_sub('1998-12-01', interval '104' day)
+group by
+	l_returnflag,
+	l_linestatus
+order by
+	l_returnflag,
+	l_linestatus;
+COMMIT;
+l_returnflag	l_linestatus	sum_qty	sum_base_price	sum_disc_price	sum_charge	avg_qty	avg_price	avg_disc	count_order
+A	F	377902653.00	566641490940.39	538305929531.5524	559845219001.961597	25.501098	38237.307604	0.050007	14819074
+N	F	9862444.00	14783463528.34	14043977130.0143	14606269381.094377	25.522999	38258.095018	0.049976	386414
+N	O	736666630.00	1104621558500.15	1049385614378.7989	1091373974926.689976	25.497488	38233.134726	0.049999	28891734
+R	F	378110027.00	566996866579.36	538648433924.5390	560193727346.241307	25.508189	38250.937968	0.049997	14823084

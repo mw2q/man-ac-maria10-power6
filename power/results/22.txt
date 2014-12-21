@@ -1,0 +1,43 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)22.sql	2.1.8.1
+-- TPC-H/TPC-R Global Sales Opportunity Query (Q22)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+
+
+select 
+  avg(c_acctbal) 
+from 
+  customer 
+where c_acctbal > 0.00
+      and substr(c_phone,1,2) in 
+      ('10', '16', '33', '27', '11', '17', '15')
+into @avgacctbal; 
+
+select
+	substr(c_phone, 1, 2) as cntrycode,
+	count(*) as numcust,
+	sum(c_acctbal) as totacctbal
+from
+	customer
+left join orders on o_custkey = c_custkey 
+where
+	substr(c_phone, 1, 2) in
+	('10', '16', '33', '27', '11', '17', '15')
+	and c_acctbal > @avgacctbal 
+	and o_custkey is null 
+group by
+	cntrycode
+order by
+	cntrycode;
+COMMIT;
+cntrycode	numcust	totacctbal
+10	9071	67842347.09
+11	9020	67964500.75
+15	9061	67962421.22
+16	8978	67288633.49
+17	9083	68164582.44
+27	9021	67675881.13
+33	9187	68920097.95

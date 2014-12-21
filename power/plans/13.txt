@@ -1,0 +1,35 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)13.sql	2.1.8.1
+-- TPC-H/TPC-R Customer Distribution Query (Q13)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+EXPLAIN
+
+
+select
+	c_count,
+	count(*) as custdist
+from
+	(
+		select
+			c_custkey,
+			count(o_orderkey) as c_count
+		from
+			customer left outer join orders on
+				c_custkey = o_custkey
+				and o_comment not like '%unusual%deposits%'
+		group by
+			c_custkey
+	) as c_orders 
+group by
+	c_count
+order by
+	custdist desc,
+	c_count desc;
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	PRIMARY	<derived2>	ALL	NULL	NULL	NULL	NULL	10375610	Using temporary; Using filesort
+2	DERIVED	customer	index	NULL	i_c_nationkey	5	NULL	1482230	Using index; Using temporary; Using filesort
+2	DERIVED	orders	ref	i_o_custkey	i_o_custkey	5	dbt3.customer.c_custkey	7	Using where; Using join buffer (flat, BKA join); Key-ordered Rowid-ordered scan

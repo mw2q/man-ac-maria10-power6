@@ -1,0 +1,141 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)21.sql	2.1.8.1
+-- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+
+
+select
+	s_name,
+	count(*) as numwait
+from
+	lineitem l1
+join supplier
+	on s_suppkey = l1.l_suppkey 
+join nation
+	on s_nationkey = n_nationkey
+join orders 
+        on o_orderkey = l1.l_orderkey
+join lineitem l2
+	on l2.l_orderkey = l1.l_orderkey
+	and l2.l_suppkey <> l1.l_suppkey
+left join 
+        lineitem l3 
+        on l3.l_orderkey = l1.l_orderkey 
+	and l3.l_suppkey <> l1.l_suppkey
+	and l3.l_receiptdate > l3.l_commitdate
+where
+	l1.l_receiptdate > l1.l_commitdate
+	and o_orderstatus = 'F'
+        and l3.l_orderkey is null
+	and n_name = 'CANADA'
+group by
+	s_name
+order by
+	numwait desc,
+	s_name
+LIMIT 100;
+COMMIT;
+s_name	numwait
+Supplier#000085043	50
+Supplier#000003849	49
+Supplier#000087339	46
+Supplier#000006274	45
+Supplier#000035537	45
+Supplier#000056703	45
+Supplier#000018614	44
+Supplier#000088426	44
+Supplier#000094681	44
+Supplier#000038993	43
+Supplier#000055778	43
+Supplier#000093896	43
+Supplier#000006370	42
+Supplier#000014851	42
+Supplier#000058856	42
+Supplier#000070268	42
+Supplier#000088458	42
+Supplier#000003528	41
+Supplier#000040356	41
+Supplier#000070839	41
+Supplier#000020707	40
+Supplier#000022332	40
+Supplier#000032258	40
+Supplier#000047638	40
+Supplier#000068734	40
+Supplier#000070381	40
+Supplier#000076843	40
+Supplier#000079009	40
+Supplier#000095867	40
+Supplier#000023994	39
+Supplier#000026639	39
+Supplier#000034128	39
+Supplier#000040787	39
+Supplier#000047144	39
+Supplier#000060575	39
+Supplier#000061322	39
+Supplier#000069438	39
+Supplier#000091377	39
+Supplier#000007987	38
+Supplier#000011187	38
+Supplier#000018363	38
+Supplier#000040139	38
+Supplier#000045233	38
+Supplier#000045356	38
+Supplier#000052461	38
+Supplier#000055732	38
+Supplier#000058445	38
+Supplier#000066905	38
+Supplier#000073046	38
+Supplier#000079706	38
+Supplier#000088214	38
+Supplier#000091498	38
+Supplier#000002980	37
+Supplier#000007402	37
+Supplier#000011961	37
+Supplier#000012753	37
+Supplier#000038179	37
+Supplier#000039171	37
+Supplier#000049363	37
+Supplier#000058300	37
+Supplier#000060525	37
+Supplier#000060883	37
+Supplier#000066446	37
+Supplier#000083776	37
+Supplier#000084204	37
+Supplier#000087592	37
+Supplier#000089910	37
+Supplier#000090084	37
+Supplier#000000884	36
+Supplier#000001626	36
+Supplier#000003553	36
+Supplier#000011767	36
+Supplier#000012990	36
+Supplier#000016358	36
+Supplier#000030243	36
+Supplier#000030569	36
+Supplier#000042276	36
+Supplier#000049748	36
+Supplier#000054073	36
+Supplier#000056991	36
+Supplier#000070466	36
+Supplier#000075482	36
+Supplier#000084772	36
+Supplier#000085277	36
+Supplier#000088326	36
+Supplier#000000287	35
+Supplier#000000729	35
+Supplier#000003095	35
+Supplier#000007448	35
+Supplier#000009899	35
+Supplier#000019223	35
+Supplier#000024595	35
+Supplier#000028856	35
+Supplier#000033194	35
+Supplier#000033936	35
+Supplier#000041861	35
+Supplier#000055206	35
+Supplier#000060281	35
+Supplier#000071823	35
+Supplier#000072469	35

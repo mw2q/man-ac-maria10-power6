@@ -1,0 +1,26 @@
+141115 01:39:56 mysqld_safe Starting mysqld daemon with databases from /data/sekondquad/dbt3/mydata
+141115  1:39:56 [Note] InnoDB: Using mutexes to ref count buffer pool pages
+141115  1:39:56 [Note] InnoDB: The InnoDB memory heap is disabled
+141115  1:39:56 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+141115  1:39:56 [Note] InnoDB: Memory barrier is not used
+141115  1:39:56 [Note] InnoDB: Compressed tables use zlib 1.2.3.4
+141115  1:39:56 [Note] InnoDB: Using CPU crc32 instructions
+141115  1:39:56 [Note] InnoDB: Initializing buffer pool, size = 1.0G
+141115  1:39:56 [Note] InnoDB: Completed initialization of buffer pool
+141115  1:39:56 [Note] InnoDB: Highest supported file format is Barracuda.
+141115  1:39:56 [Note] InnoDB: 128 rollback segment(s) are active.
+141115  1:39:56 [Note] InnoDB: Waiting for purge to start
+141115  1:39:56 [Note] InnoDB:  Percona XtraDB (http://www.percona.com) 5.6.20-68.0 started; log sequence number 1616707
+141115  1:39:56 [Note] Server socket created on IP: '::'.
+141115  1:39:56 [Note] Event Scheduler: Loaded 0 events
+141115  1:39:56 [Note] /home/sekondquad/bin/mariadb100014/bin/mysqld: ready for connections.
+Version: '10.0.14-MariaDB'  socket: '/tmp/mysql.sock'  port: 3306  Source distribution
+141115  2:32:17 [Note] /home/sekondquad/bin/mariadb100014/bin/mysqld: Normal shutdown
+
+141115  2:32:17 [Note] Event Scheduler: Purging the queue. 0 events
+141115  2:32:17 [Note] InnoDB: FTS optimize thread exiting.
+141115  2:32:17 [Note] InnoDB: Starting shutdown...
+141115  2:32:19 [Note] InnoDB: Shutdown completed; log sequence number 28233480820
+141115  2:32:19 [Note] /home/sekondquad/bin/mariadb100014/bin/mysqld: Shutdown complete
+
+141115 02:32:19 mysqld_safe mysqld from pid file /data/sekondquad/dbt3/mydata/axle.pid ended

@@ -1,0 +1,32 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)17.sql	2.1.8.1
+-- TPC-H/TPC-R Small-Quantity-Order Revenue Query (Q17)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+EXPLAIN
+
+
+select
+	sum(l_extendedprice) / 7.0 as avg_yearly
+from
+	lineitem,
+	part
+where
+	p_partkey = l_partkey
+	and p_brand = 'Brand#12'
+	and p_container = 'LG JAR'
+	and l_quantity < (
+		select
+			0.2 * avg(l_quantity)
+		from
+			lineitem
+		where
+			l_partkey = p_partkey
+	);
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	PRIMARY	part	ALL	PRIMARY	NULL	NULL	NULL	1982621	Using where
+1	PRIMARY	lineitem	ref	i_l_suppkey_partkey	i_l_suppkey_partkey	5	dbt3.part.p_partkey	14	Using where; Using join buffer (flat, BKA join); Key-ordered Rowid-ordered scan
+2	DEPENDENT SUBQUERY	lineitem	ref	i_l_suppkey_partkey	i_l_suppkey_partkey	5	dbt3.part.p_partkey	14	

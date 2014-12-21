@@ -1,0 +1,27 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)14.sql	2.1.8.1
+-- TPC-H/TPC-R Promotion Effect Query (Q14)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+EXPLAIN
+
+
+select
+	100.00 * sum(case
+		when p_type like 'PROMO%'
+			then l_extendedprice * (1 - l_discount)
+		else 0
+	end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
+from
+	lineitem,
+	part
+where
+	l_partkey = p_partkey
+	and l_shipdate >= '1997-04-01'
+	and l_shipdate < date_add( '1997-04-01', interval '1' month);
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	part	ALL	PRIMARY	NULL	NULL	NULL	1982621	
+1	SIMPLE	lineitem	ref	i_l_suppkey_partkey	i_l_suppkey_partkey	5	dbt3.part.p_partkey	14	Using where; Using join buffer (flat, BKA join); Key-ordered Rowid-ordered scan

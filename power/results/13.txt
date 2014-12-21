@@ -1,0 +1,77 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)13.sql	2.1.8.1
+-- TPC-H/TPC-R Customer Distribution Query (Q13)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+
+
+select
+	c_count,
+	count(*) as custdist
+from
+	(
+		select
+			c_custkey,
+			count(o_orderkey) as c_count
+		from
+			customer left outer join orders on
+				c_custkey = o_custkey
+				and o_comment not like '%unusual%deposits%'
+		group by
+			c_custkey
+	) as c_orders 
+group by
+	c_count
+order by
+	custdist desc,
+	c_count desc;
+COMMIT;
+c_count	custdist
+0	500021
+10	66032
+9	65121
+11	62229
+8	58264
+12	55744
+13	50170
+7	46547
+19	46542
+18	46248
+20	45390
+14	45134
+17	44907
+15	43960
+16	43520
+21	42498
+22	38103
+6	32698
+23	32682
+24	26790
+25	21214
+5	19617
+26	16065
+27	11719
+4	9923
+28	8137
+29	5738
+3	3990
+30	3709
+31	2386
+32	1522
+2	1193
+33	859
+34	510
+35	280
+1	236
+36	129
+37	83
+38	44
+39	19
+40	13
+41	6
+42	4
+43	2
+46	1
+44	1

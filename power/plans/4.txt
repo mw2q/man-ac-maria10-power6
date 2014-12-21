@@ -1,0 +1,36 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)4.sql	2.1.8.1
+-- TPC-H/TPC-R Order Priority Checking Query (Q4)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+EXPLAIN
+
+
+select
+	o_orderpriority,
+	count(*) as order_count
+from
+	orders
+where
+	o_orderdate >=  '1996-12-01'
+	and o_orderdate < date_add( '1996-12-01', interval '3' month)
+	and exists (
+		select
+			*
+		from
+			lineitem
+		where
+			l_orderkey = o_orderkey
+			and l_commitdate < l_receiptdate
+	)
+group by
+	o_orderpriority
+order by
+	o_orderpriority;
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	PRIMARY	orders	range	PRIMARY,i_o_orderdate	i_o_orderdate	4	NULL	1026544	Using where; Rowid-ordered scan; Using temporary; Using filesort
+1	PRIMARY	<subquery2>	eq_ref	distinct_key	distinct_key	4	func	1	
+2	MATERIALIZED	lineitem	ALL	NULL	NULL	NULL	NULL	59465022	Using where

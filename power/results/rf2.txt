@@ -1,0 +1,4 @@
+Sat Nov 15 04:48:00 UTC 2014: Stream 2 : Starting Refresh Stream 2...
+ERROR 13 (HY000) at line 3: Can't get stat of '/data/sekondquad/dbt3/mydss/delete.2' (Errcode: 2 "No such file or directory")
+Sat Nov 15 04:48:00 UTC 2014: Stream 2 : Refresh Stream 2 completed.
+Stream 2 : Elapsed time for Refresh Stream 2 : 0 seconds

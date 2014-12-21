@@ -1,0 +1,58 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)18.sql	2.1.8.1
+-- TPC-H/TPC-R Large Volume Customer Query (Q18)
+-- Function Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+
+drop table if exists temp_lineitems0; 
+create table temp_lineitems0 (
+ t_orderkey integer not null, 
+ primary key (t_orderkey) 
+);
+insert into temp_lineitems0 
+  select
+    l_orderkey t_orderkey
+  from
+    lineitem
+  group by
+    l_orderkey having
+  sum(l_quantity) > 312;
+EXPLAIN
+
+select
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice,
+	sum(l_quantity)
+from
+	customer,
+	orders,
+	lineitem,
+        temp_lineitems0
+where
+	o_orderkey = t_orderkey
+	and c_custkey = o_custkey
+	and o_orderkey = l_orderkey
+group by
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice
+order by
+	o_totalprice desc,
+	o_orderdate
+LIMIT 100;
+
+drop table temp_lineitems0; 
+
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	lineitem	ALL	NULL	NULL	NULL	NULL	59465022	Using where; Using temporary; Using filesort
+1	SIMPLE	orders	eq_ref	PRIMARY,i_o_custkey	PRIMARY	4	dbt3.lineitem.l_orderkey	1	Using where; Using join buffer (flat, BKA join); Key-ordered scan
+1	SIMPLE	customer	eq_ref	PRIMARY	PRIMARY	4	dbt3.orders.o_custkey	1	Using join buffer (incremental, BKA join); Key-ordered scan
+1	SIMPLE	temp_lineitems0	eq_ref	PRIMARY	PRIMARY	4	dbt3.lineitem.l_orderkey	1	Using index

@@ -1,0 +1,48 @@
+-- using 1115013950 as a seed to the RNG
+-- @(#)21.sql	2.1.8.1
+-- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21)
+-- Functional Query Definition
+-- Approved February 1998
+START TRANSACTION;
+
+EXPLAIN
+
+
+select
+	s_name,
+	count(*) as numwait
+from
+	lineitem l1
+join supplier
+	on s_suppkey = l1.l_suppkey 
+join nation
+	on s_nationkey = n_nationkey
+join orders 
+        on o_orderkey = l1.l_orderkey
+join lineitem l2
+	on l2.l_orderkey = l1.l_orderkey
+	and l2.l_suppkey <> l1.l_suppkey
+left join 
+        lineitem l3 
+        on l3.l_orderkey = l1.l_orderkey 
+	and l3.l_suppkey <> l1.l_suppkey
+	and l3.l_receiptdate > l3.l_commitdate
+where
+	l1.l_receiptdate > l1.l_commitdate
+	and o_orderstatus = 'F'
+        and l3.l_orderkey is null
+	and n_name = 'CANADA'
+group by
+	s_name
+order by
+	numwait desc,
+	s_name
+LIMIT 100;
+COMMIT;
+id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
+1	SIMPLE	l1	ALL	NULL	NULL	NULL	NULL	59465022	Using where; Using temporary; Using filesort
+1	SIMPLE	supplier	eq_ref	PRIMARY,i_s_nationkey	PRIMARY	4	dbt3.l1.l_suppkey	1	Using where; Using join buffer (flat, BKA join); Key-ordered scan
+1	SIMPLE	orders	eq_ref	PRIMARY	PRIMARY	4	dbt3.l1.l_orderkey	1	Using where; Using join buffer (incremental, BKA join); Key-ordered scan
+1	SIMPLE	nation	eq_ref	PRIMARY	PRIMARY	4	dbt3.supplier.s_nationkey	1	Using where; Using join buffer (incremental, BKA join); Key-ordered scan
+1	SIMPLE	l2	hash_ALL	NULL	#hash#$hj	5	dbt3.l1.l_orderkey	59465022	Using where; Using join buffer (incremental, BNLH join)
+1	SIMPLE	l3	hash_ALL	NULL	#hash#$hj	5	dbt3.l1.l_orderkey	59465022	Using where; Using join buffer (incremental, BNLH join)
